@@ -5,12 +5,12 @@ const ENV = {
     ASSET_BASE: 'http://127.0.0.1:8001/static/assets/'
   },
   trial: {
-    API_BASE: 'https://api.example.com/api/v1',
-    ASSET_BASE: 'https://cdn.example.com/linghuali/'
+    API_BASE: 'https://vote.jh8.ai/api/v1',
+    ASSET_BASE: 'https://vote.jh8.ai/static/assets/'
   },
   release: {
-    API_BASE: 'https://api.example.com/api/v1',
-    ASSET_BASE: 'https://cdn.example.com/linghuali/'
+    API_BASE: 'https://vote.jh8.ai/api/v1',
+    ASSET_BASE: 'https://vote.jh8.ai/static/assets/'
   }
 }
 

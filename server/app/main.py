@@ -28,7 +28,8 @@ def create_app() -> FastAPI:
 
     ASSETS_DIR.mkdir(parents=True, exist_ok=True)
     UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
-    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+    # follow_symlink: on the server static/uploads links to a directory outside the release tree
+    app.mount("/static", StaticFiles(directory=STATIC_DIR, follow_symlink=True), name="static")
     # Operator console (static SPA; talks to /api/v1/admin with X-Admin-Token).
     app.mount("/admin", StaticFiles(directory=ADMIN_DIR, html=True), name="admin")
     return app

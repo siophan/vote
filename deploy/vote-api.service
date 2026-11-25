@@ -1,0 +1,17 @@
+[Unit]
+Description=Linghuali API (uvicorn on 127.0.0.1:8030)
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=vote
+Group=vote
+WorkingDirectory=/www/wwwroot/vote/app
+EnvironmentFile=/www/wwwroot/vote/.env
+ExecStart=/www/wwwroot/vote/app/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8030 --workers 2 --proxy-headers --forwarded-allow-ips 127.0.0.1
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
