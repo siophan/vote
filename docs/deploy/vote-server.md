@@ -12,7 +12,7 @@
 1. 开发机：`ssh ubuntu@18.162.184.136 sudo bash -s -- vote.jh8.ai < deploy/bootstrap.sh`。建用户和目录、装 uv 和 Python 3.12、建 Postgres 角色和库，并生成 `.env`（随机 `JWT_SECRET`、`ADMIN_TOKEN` 和数据库密码，`WECHAT_MOCK_LOGIN=false`）。
 2. 服务器：`sudo -e /www/wwwroot/vote/.env` 填 `WECHAT_SECRET`（小程序后台 → 开发管理 → 开发设置），然后 `sudo systemctl restart vote-api`。不填时小程序登录会失败，其余接口和后台正常。
 3. 开发机：`deploy/deploy.sh`（见第二节）。
-4. nginx：按 `deploy/nginx-vote.jh8.ai.conf` 改站点配置。删掉面板默认的两个静态文件正则块（不删的话 `/admin/app.js` 和图片会去空的站点根目录找，返回 404），在原位置放 `#VOTE-API-START…END` 之间的内容；保留面板的证书、HTTPS 跳转和 well-known 段。改前先备份到 `/root/vote-nginx-backup/`，然后 `/www/server/nginx/sbin/nginx -t && /www/server/nginx/sbin/nginx -s reload`。注意：在面板里改这个站点的设置（比如重新开关 SSL）可能重写这个文件，改完检查这一段还在。
+4. nginx：`ssh ubuntu@18.162.184.136 sudo bash /www/wwwroot/vote/app/deploy/patch-nginx.sh`，它按 `deploy/nginx-vote.jh8.ai.conf` 改站点配置（可重复执行，`nginx -t` 不过会自动还原）。删掉面板默认的两个静态文件正则块（不删的话 `/admin/app.js` 和图片会去空的站点根目录找，返回 404），在原位置放 `#VOTE-API-START…END` 之间的内容；保留面板的证书、HTTPS 跳转和 well-known 段。改前先备份到 `/root/vote-nginx-backup/`，然后 `/www/server/nginx/sbin/nginx -t && /www/server/nginx/sbin/nginx -s reload`。注意：在面板里改这个站点的设置（比如重新开关 SSL）可能重写这个文件，改完检查这一段还在。
 5. 验证：`curl https://vote.jh8.ai/api/v1/health` 返回 `{"status":"ok"}`；打开 <https://vote.jh8.ai/admin/>，用 `.env` 里的 `ADMIN_TOKEN` 登录（`sudo grep ADMIN_TOKEN /www/wwwroot/vote/.env`）。
 
 ## 二、发布新版本
