@@ -1,0 +1,70 @@
+<view wx:if="{{error && !event}}" class="empty"><view>{{error}}</view><view>下拉可重新加载</view></view>
+
+<view wx:if="{{event}}" class="page-wrap plain">
+  <view class="cover">
+    <image class="cover-img" src="{{event.cover_url}}" mode="aspectFill" webp />
+    <view class="cover-shade"></view>
+    <view class="cover-badge"><icon-badge icon-key="{{event.icon_key}}" size="{{96}}" /></view>
+    <view class="cover-copy">
+      <text class="cover-small">{{event.category}} · 视频赛事</text>
+      <text class="cover-title">{{event.title}}</text>
+    </view>
+  </view>
+
+  <view class="grid-3 stats">
+    <view class="stat"><text class="stat-value hot">{{event.heat}}</text><text class="stat-label">赛事热度</text></view>
+    <view class="stat"><text class="stat-value">{{stats.participants}}</text><text class="stat-label">参与人数</text></view>
+    <view class="stat"><text class="stat-value">{{stats.flowers}}</text><text class="stat-label">小红花支持</text></view>
+  </view>
+
+  <view class="card">
+    <view class="meta-row"><text>📍 {{event.geo}}</text><text>⏳ {{event.status_text}}</text></view>
+    <view class="desc">{{event.desc}}</view>
+    <view class="insights">
+      <view class="insight">赛道<text class="strong">{{event.track}}</text></view>
+      <view class="insight">视频号<text class="strong">{{event.video_status}}</text></view>
+      <view class="insight {{event.ai_allowed ? 'is-ai' : ''}}">{{event.ai_label}}</view>
+    </view>
+    <view class="reward-strip">
+      <image class="ico" src="{{icons.gift}}" />
+      <view>参与奖励可兑换 <text class="strong">{{event.reward_text}}</text></view>
+    </view>
+  </view>
+
+  <view class="card steps">
+    <view class="steps-title">怎么参加</view>
+    <view class="step"><text class="step-no">01</text><view><text class="step-name">报名赛事</text><text class="step-desc">首次报名送 10 朵小红花（每天最多 3 场），并计入赛事参与人数。</text></view></view>
+    <view class="step"><text class="step-no">02</text><view><text class="step-name">提交视频号作品</text><text class="step-desc">在视频号发布后复制视频链接，粘贴到投稿页。</text></view></view>
+    <view class="step"><text class="step-no">03</text><view><text class="step-name">审核与支持</text><text class="step-desc">审核通过再得 50 朵，作品进入榜单接受邻里送花。</text></view></view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <view>
+        <view class="section-title">参赛作品</view>
+        <view class="section-note">{{worksTotal ? '共 ' + worksTotal + ' 件作品，按小红花排序' : '还没有通过审核的作品，来做第一个吧'}}</view>
+      </view>
+    </view>
+    <view class="rank-item" wx:for="{{works}}" wx:key="id" data-id="{{item.id}}" bindtap="openWork">
+      <view class="rank-no {{index === 0 ? 'first' : ''}}">{{index + 1}}</view>
+      <view class="avatar rank-avatar">
+        <image wx:if="{{item.author.avatar_url}}" src="{{item.author.avatar_url}}" mode="aspectFill" />
+        <image wx:else class="ico" src="{{icons.user}}" />
+      </view>
+      <view class="rank-main">
+        <text class="rank-name">{{item.title}}</text>
+        <text class="rank-sub">{{item.author.nickname}}{{item.author.city ? ' · ' + item.author.city : ''}}</text>
+      </view>
+      <text class="rank-score">{{item.flowers}} 朵</text>
+    </view>
+    <view wx:if="{{worksLoading}}" class="loading-more">正在加载…</view>
+    <view wx:elif="{{works.length && works.length >= worksTotal && worksTotal > 20}}" class="loading-more">已经到底了</view>
+  </view>
+</view>
+
+<view wx:if="{{event}}" class="action-bar">
+  <button wx:if="{{!event.enrolled}}" class="btn btn-outline" hover-class="btn-hover" loading="{{enrolling}}" bindtap="enroll">报名参赛</button>
+  <button wx:else class="btn btn-outline" disabled>已报名</button>
+  <button class="btn btn-primary" hover-class="btn-hover" bindtap="goSubmit">提交作品</button>
+  <button class="btn btn-outline share" open-type="share" hover-class="btn-hover">分享</button>
+</view>

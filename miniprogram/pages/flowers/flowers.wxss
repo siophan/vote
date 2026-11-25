@@ -1,0 +1,4 @@
+.rank-avatar { margin-left: 16rpx; }
+.rank-main { margin: 0 16rpx; }
+.rank-score { margin-right: 12rpx; }
+.head-actions .chip.last { margin-right: 0; }

@@ -1,0 +1,2 @@
+.badge { position: relative; overflow: hidden; flex: 0 0 auto; }
+.sprite { position: absolute; max-width: none; }

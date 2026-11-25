@@ -1,0 +1,26 @@
+<view class="page-wrap plain">
+  <view wx:if="{{error}}" class="empty">{{error}}</view>
+  <view wx:elif="{{loading}}" class="empty">正在加载…</view>
+  <view wx:elif="{{!orders.length}}" class="empty">
+    <view>还没有订单</view>
+    <button class="btn btn-primary btn-small go" hover-class="btn-hover" bindtap="goMall">去商城看看</button>
+  </view>
+  <view class="list-card order" wx:for="{{orders}}" wx:key="id">
+    <view class="list-row">
+      <text class="list-sub no-top">{{item.created}}</text>
+      <text class="tag {{item.tone}}">{{item.status_text}}</text>
+    </view>
+    <view class="order-main">
+      <image class="order-img" src="{{item.product.image_url}}" mode="aspectFill" webp lazy-load />
+      <view class="order-info">
+        <view class="list-title">{{item.product.name}}</view>
+        <view class="list-sub">× {{item.quantity}} · <text class="price">{{item.totalText}} 朵</text></view>
+      </view>
+    </view>
+    <view wx:if="{{item.address}}" class="address"><view>{{item.address.name}} {{item.address.phone}}</view>{{item.address.province}}{{item.address.city}}{{item.address.district}}{{item.address.detail}}</view>
+    <view wx:if="{{item.tracking_no}}" class="address" data-no="{{item.tracking_no}}" bindtap="copyTracking">运单号：{{item.tracking_no}}（点击复制）</view>
+    <view wx:if="{{item.status === 'pending_shipment'}}" class="actions">
+      <button class="btn btn-outline btn-small" hover-class="btn-hover" loading="{{cancellingId === item.id}}" data-id="{{item.id}}" bindtap="cancel">取消订单</button>
+    </view>
+  </view>
+</view>

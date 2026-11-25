@@ -1,0 +1,85 @@
+<brand-bar avatar-url="{{avatarUrl}}" />
+
+<view class="page-wrap with-tab">
+  <view class="hero">
+    <image class="hero-art" src="{{hero}}" mode="aspectFill" webp />
+    <view class="hero-shade"></view>
+    <view class="hero-content">
+      <view>
+        <view class="eyebrow">龄花里 · 视频赛事与银龄生活</view>
+        <view class="hero-title">让内容被看见，让参与有回报</view>
+        <view class="hero-lede">用一条视频参加身边的比赛，和邻里一起收获小红花，把喜欢的生活分享出去。</view>
+      </view>
+      <view>
+        <view class="hero-actions">
+          <button class="btn btn-primary" hover-class="btn-hover" bindtap="goEvents">发现赛事</button>
+          <button class="btn btn-ghost" hover-class="btn-hover" bindtap="goSubmit">提交作品</button>
+        </view>
+        <view class="grid-3 stat-strip">
+          <view class="stat"><text class="stat-value">视频赛事</text><text class="stat-label">按主题与地域参与</text></view>
+          <view class="stat"><text class="stat-value">小红花</text><text class="stat-label">支持、兑换、公益</text></view>
+          <view class="stat"><text class="stat-value">视频号</text><text class="stat-label">粘贴链接即可参赛</text></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <view>
+        <view class="section-title">正在发生</view>
+        <view class="section-note">本季精选赛事，可按城市与主题筛选</view>
+      </view>
+      <text class="text-link" bindtap="goEvents">查看全部</text>
+    </view>
+    <view wx:if="{{error}}" class="empty"><view>{{error}}</view><view>下拉可重新加载</view></view>
+    <view wx:elif="{{loading}}" class="empty">正在加载赛事…</view>
+    <view wx:else class="waterfall">
+      <view class="col">
+        <event-card wx:for="{{left}}" wx:key="id" event="{{item}}" variant="waterfall" thumb-height="{{item.thumbHeight}}" />
+      </view>
+      <view class="col">
+        <event-card wx:for="{{right}}" wx:key="id" event="{{item}}" variant="waterfall" thumb-height="{{item.thumbHeight}}" />
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <view>
+        <view class="section-title">你可以从这里开始</view>
+        <view class="section-note">每个入口都会回到同一个小红花账本</view>
+      </view>
+    </view>
+    <view class="grid-2">
+      <view class="mini-card" bindtap="goSubmit">
+        <image class="mini-icon" src="{{icons.upload}}" />
+        <text class="mini-title">投稿参赛</text>
+        <text class="mini-desc">粘贴视频号作品链接，审核通过后生成作品页。</text>
+      </view>
+      <view class="mini-card" bindtap="goFlowers">
+        <image class="mini-icon" src="{{icons.flower}}" />
+        <text class="mini-title">送出小红花</text>
+        <text class="mini-desc">支持喜欢的作品，也可以把花朵用于商城与公益。</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section" wx:if="{{rewards.length}}">
+    <view class="section-head">
+      <view>
+        <view class="section-title">参加赛事，赢取好礼</view>
+        <view class="section-note">赛事成长值和小红花可以回到商城兑换</view>
+      </view>
+      <text class="text-link" bindtap="goMall">查看商城</text>
+    </view>
+    <view class="grid-2">
+      <view class="reward-card" wx:for="{{rewards}}" wx:key="id" bindtap="goMall">
+        <view class="reward-visual"><image src="{{item.image_url}}" mode="aspectFill" webp lazy-load /></view>
+        <view class="reward-name">{{item.name}}</view>
+        <view class="reward-desc">{{item.reward_desc}}</view>
+        <view class="reward-price"><image class="ico" src="{{icons.flowerSmall}}" />{{item.priceText}} 朵小红花</view>
+      </view>
+    </view>
+  </view>
+</view>

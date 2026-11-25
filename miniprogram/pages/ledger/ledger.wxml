@@ -1,0 +1,25 @@
+<view class="page-wrap plain">
+  <view class="profile-card soft">
+    <view class="profile-top">
+      <view>
+        <view class="profile-name">当前余额</view>
+        <view class="profile-sub">共 {{total}} 笔记录</view>
+      </view>
+      <view class="flower-balance"><text class="value">{{balance}}<text class="unit">朵</text></text></view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view wx:if="{{error}}" class="empty">{{error}}</view>
+    <view class="list-card entry" wx:for="{{items}}" wx:key="id">
+      <view class="entry-main">
+        <view class="list-title">{{item.reason_text}}</view>
+        <view wx:if="{{item.note}}" class="list-sub">{{item.note}}</view>
+        <view class="list-sub">{{item.time}} · 余额 {{item.balance_after}}</view>
+      </view>
+      <text class="delta {{item.delta > 0 ? 'plus' : 'minus'}}">{{item.deltaText}}</text>
+    </view>
+    <view wx:if="{{loading}}" class="loading-more">正在加载…</view>
+    <view wx:elif="{{!hasMore && items.length}}" class="loading-more">没有更多了</view>
+  </view>
+</view>

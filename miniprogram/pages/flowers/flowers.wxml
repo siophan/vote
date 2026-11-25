@@ -1,0 +1,65 @@
+<view class="page-wrap with-tab">
+  <view class="section-head page-head">
+    <view>
+      <view class="section-title">小红花</view>
+      <view class="section-note">把喜欢变成可使用的支持</view>
+    </view>
+    <button class="btn btn-outline btn-small" hover-class="btn-hover" bindtap="goLedger">查看账本</button>
+  </view>
+
+  <view class="profile-card" bindtap="goMine">
+    <view class="profile-top">
+      <view>
+        <view class="profile-name">我的小红花账户</view>
+        <view class="profile-sub">{{user ? user.nickname : '登录中…'}} · 点此进入「我的」</view>
+      </view>
+      <view class="flower-balance"><text class="label">当前小红花</text><text class="value">{{balance}}</text></view>
+    </view>
+    <view class="progress"><view class="progress-bar" style="width:{{progress.percent}}%;"></view></view>
+    <view class="milestone"><text>{{user ? user.level_name : ''}}</text><text>{{progress.text}}</text></view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <view>
+        <view class="section-title">小红花可以去哪里</view>
+        <view class="section-note">兑换与撤销按订单状态处理</view>
+      </view>
+    </view>
+    <view class="grid-2">
+      <view class="mini-card" bindtap="goMall"><image class="mini-icon" src="{{icons.bag}}" /><text class="mini-title">商城兑换</text><text class="mini-desc">兑换优质供应链商品，平台记录订单与履约。</text></view>
+      <view class="mini-card" bindtap="goCharity"><image class="mini-icon" src="{{icons.handshake}}" /><text class="mini-title">公益支持</text><text class="mini-desc">参与公益项目，查看说明、进度和结果。</text></view>
+      <view class="mini-card" bindtap="goRanking"><image class="mini-icon" src="{{icons.flower}}" /><text class="mini-title">给他人送花</text><text class="mini-desc">把支持送给喜欢的作品和邻里的生活故事。</text></view>
+      <view class="mini-card" bindtap="goLedger"><image class="mini-icon" src="{{icons.medal}}" /><text class="mini-title">成长记录</text><text class="mini-desc">参与赛事、获得互动和贡献都会沉淀在账本里。</text></view>
+    </view>
+  </view>
+
+  <view class="section" id="ranking">
+    <view class="section-head">
+      <view>
+        <view class="section-title">{{scope === 'city' ? user.city + '榜单' : '作品榜单'}}</view>
+        <view class="section-note">按作品收到的小红花排序</view>
+      </view>
+      <view class="head-actions">
+        <view class="chip {{scope === 'all' ? 'active' : ''}}" data-scope="all" bindtap="setScope">全国</view>
+        <view class="chip last {{scope === 'city' ? 'active' : ''}}" data-scope="city" bindtap="setScope">同城</view>
+      </view>
+    </view>
+    <view wx:if="{{rankLoading && !rankings.length}}" class="empty">正在加载榜单…</view>
+    <view wx:elif="{{!rankings.length}}" class="empty">还没有上榜作品，去投稿成为第一名吧</view>
+    <view class="rank-item" wx:for="{{rankings}}" wx:key="submission_id" data-id="{{item.submission_id}}" bindtap="openWork">
+      <view class="rank-no {{index === 0 ? 'first' : ''}}">{{item.rank}}</view>
+      <view class="avatar rank-avatar">
+        <image wx:if="{{item.author_avatar_url}}" src="{{item.author_avatar_url}}" mode="aspectFill" />
+        <image wx:else class="ico" src="{{icons.user}}" />
+      </view>
+      <view class="rank-main">
+        <text class="rank-name">{{item.author_nickname}} · {{item.title}}</text>
+        <text class="rank-sub">{{item.event_title}}{{item.city ? ' · ' + item.city : ''}}</text>
+      </view>
+      <text class="rank-score">{{item.flowers}} 朵</text>
+      <text wx:if="{{user && item.author_id === user.id}}" class="tag">我的</text>
+      <button wx:else class="btn btn-outline btn-small" hover-class="btn-hover" loading="{{sendingId === item.submission_id}}" data-id="{{item.submission_id}}" catchtap="sendOne">送花</button>
+    </view>
+  </view>
+</view>

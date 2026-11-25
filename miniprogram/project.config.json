@@ -1,0 +1,19 @@
+{
+  "appid": "wx88c5b6fa273b465d",
+  "projectname": "linghuali",
+  "description": "龄花里 · 银龄视频赛事与小红花",
+  "compileType": "miniprogram",
+  "libVersion": "3.6.0",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "lazyCodeLoading": "requiredComponents",
+    "ignoreUploadUnusedFiles": true
+  },
+  "packOptions": { "ignore": [], "include": [] },
+  "condition": {},
+  "editorSetting": { "tabIndent": "insertSpaces", "tabSize": 2 }
+}

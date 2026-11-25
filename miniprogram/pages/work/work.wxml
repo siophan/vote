@@ -1,0 +1,58 @@
+<view wx:if="{{error && !work}}" class="empty">{{error}}</view>
+
+<view wx:if="{{work}}" class="page-wrap plain">
+  <channel-video
+    wx:if="{{work.feed_token}}"
+    class="video"
+    feed-token="{{work.feed_token}}"
+    binderror="onVideoError"
+  />
+  <view wx:else class="player" bindtap="watch">
+    <image class="play-ico" src="{{icons.play}}" />
+    <view class="player-title">去视频号观看</view>
+    <view class="player-sub">{{work.finder_user_name && work.feed_id ? '将跳转到视频号播放' : '点这里复制链接，按提示到微信聊天里打开'}}</view>
+  </view>
+
+  <view class="card">
+    <view class="list-row">
+      <view class="title">{{work.title}}</view>
+      <text wx:if="{{isMine && status}}" class="tag {{status.tone}}">{{status.text}}</text>
+    </view>
+    <view wx:if="{{work.reject_reason && isMine}}" class="reject">未通过原因：{{work.reject_reason}}</view>
+    <view class="author">
+      <view class="avatar">
+        <image wx:if="{{work.author.avatar_url}}" src="{{work.author.avatar_url}}" mode="aspectFill" />
+        <image wx:else class="ico" src="{{icons.user}}" />
+      </view>
+      <view class="author-main">
+        <text class="rank-name">{{work.author.nickname}}</text>
+        <text class="rank-sub">{{work.author.city || '龄花里'}} · {{created}}</text>
+      </view>
+      <view class="flower-total"><text class="flower-count">✿ {{flowers}}</text><text class="flower-unit">朵支持</text></view>
+    </view>
+    <view wx:if="{{work.description}}" class="desc">{{work.description}}</view>
+    <view class="event-link" bindtap="goEvent">
+      <text>参赛赛事：{{work.event_title}}</text><text class="go">查看赛事 ›</text>
+    </view>
+    <view class="link-row" bindtap="copyLink">
+      <image class="ico" src="{{icons.link}}" />
+      <text class="link-text ellipsis">{{work.video_url}}</text>
+      <text class="go">复制</text>
+    </view>
+  </view>
+
+  <view wx:if="{{!isMine}}" class="card">
+    <view class="list-row">
+      <view class="steps-title">送出小红花</view>
+      <text class="balance">我的余额 {{balance}} 朵</text>
+    </view>
+    <view class="counts">
+      <view wx:for="{{counts}}" wx:key="*this" class="chip {{count === item ? 'active' : ''}}" data-count="{{item}}" bindtap="pickCount">{{item}} 朵</view>
+    </view>
+    <button class="btn btn-primary btn-block" hover-class="btn-hover" loading="{{sending}}" bindtap="send">送出 {{count}} 朵小红花</button>
+    <view class="hint">送出的小红花会进入作者账本，可用于商城兑换与公益。每天给同一位作者最多送 20 朵。</view>
+  </view>
+
+  <button wx:if="{{work.status === 'approved'}}" class="btn btn-outline btn-block share" open-type="share" hover-class="btn-hover">分享给亲友，请他们送花</button>
+  <view wx:elif="{{isMine}}" class="note-box">{{work.status === 'rejected' ? '作品未通过审核，可以修改后重新投稿。' : '作品审核通过后就能分享给亲友，请他们来送花。'}}</view>
+</view>

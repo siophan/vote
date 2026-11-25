@@ -1,0 +1,8 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "brand-bar": "/components/brand-bar/index",
+    "event-card": "/components/event-card/index"
+  },
+  "enablePullDownRefresh": true
+}

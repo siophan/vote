@@ -1,0 +1,36 @@
+.upload-zone {
+  border: 3rpx dashed #d2b99b;
+  background: rgba(255, 250, 242, 0.65);
+  border-radius: var(--radius-xl);
+  padding: 52rpx 36rpx 40rpx;
+}
+.upload-icon {
+  width: 116rpx; height: 116rpx;
+  margin: 0 auto 24rpx;
+  border-radius: 36rpx;
+  background: var(--orange-soft);
+  display: flex; align-items: center; justify-content: center;
+}
+.upload-icon image { width: 60rpx; height: 60rpx; }
+.zone-title { text-align: center; font-size: 40rpx; font-weight: 900; }
+.zone-desc { text-align: center; color: var(--muted); font-size: 26rpx; line-height: 1.55; margin: 16rpx auto 8rpx; max-width: 620rpx; }
+
+.form { margin-top: 12rpx; }
+.url-row { display: flex; align-items: center; }
+.url-row .input { flex: 1; min-width: 0; }
+.paste { margin-left: 16rpx; flex: 0 0 auto; min-height: 92rpx; }
+.field-hint { margin-top: 10rpx; color: var(--muted); font-size: 24rpx; }
+.link-error { margin-top: 12rpx; padding: 14rpx 18rpx; border-radius: 20rpx; background: #f8e2d8; color: #9d5139; font-size: 24rpx; line-height: 1.5; }
+
+.rights { display: flex; align-items: flex-start; margin-top: 32rpx; color: var(--muted); font-size: 24rpx; line-height: 1.5; }
+.checkbox {
+  width: 36rpx; height: 36rpx; flex: 0 0 auto; margin: 2rpx 14rpx 0 0;
+  border: 2rpx solid #c9b190; border-radius: 10rpx;
+  display: flex; align-items: center; justify-content: center;
+  color: #fffaf2; font-size: 24rpx; font-weight: 900; background: var(--paper);
+}
+.checkbox.on { background: var(--olive); border-color: var(--olive); }
+.submit { margin-top: 36rpx; }
+
+.step { min-height: 0; margin-bottom: 20rpx; }
+.step .mini-num { color: var(--orange); }

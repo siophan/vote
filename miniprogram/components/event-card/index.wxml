@@ -1,0 +1,31 @@
+<view class="event-card {{variant}}" bindtap="open">
+  <view class="thumb" style="{{variant === 'waterfall' ? 'height:' + thumbHeight + 'rpx;' : ''}}">
+    <image class="thumb-img" src="{{event.cover_url}}" mode="aspectFill" webp lazy-load />
+    <view class="thumb-shade"></view>
+    <view class="thumb-copy">
+      <text class="thumb-small">{{event.category}} · {{variant === 'waterfall' ? event.geo : '视频赛事'}}</text>
+      <text class="thumb-title">{{event.title}}</text>
+    </view>
+    <view class="thumb-art"><icon-badge icon-key="{{event.icon_key}}" size="{{variant === 'waterfall' ? 76 : 96}}" /></view>
+  </view>
+  <view class="body">
+    <view class="meta-row"><text>📍 {{event.geo}}</text><text>⏳ {{event.status_text}}</text></view>
+    <view class="insights">
+      <view class="insight is-hot">热度<text class="strong">{{event.heat}}</text></view>
+      <view class="insight">参与<text class="strong">{{participants}} 人</text></view>
+      <view wx:if="{{variant === 'catalog'}}" class="insight">赛道<text class="strong">{{event.track}}</text></view>
+      <view wx:if="{{variant === 'catalog'}}" class="insight">视频号<text class="strong">{{event.video_status}}</text></view>
+      <view class="insight {{event.ai_allowed ? 'is-ai' : ''}}">{{event.ai_label}}</view>
+    </view>
+    <view wx:if="{{variant === 'catalog'}}" class="title">{{event.title}}</view>
+    <view class="desc">{{event.desc}}</view>
+    <view class="reward-strip">
+      <image class="ico" src="{{giftIcon}}" />
+      <view>{{variant === 'catalog' ? '参与奖励可兑换 ' : '可兑换 '}}<text class="strong">{{event.reward_text}}</text></view>
+    </view>
+    <view class="foot">
+      <text class="flower-count">✿ {{flowers}} 朵支持</text>
+      <button class="btn btn-olive btn-small join" hover-class="btn-hover" catchtap="onJoin">{{event.enrolled ? '已报名 · 去投稿' : '参加赛事'}}</button>
+    </view>
+  </view>
+</view>

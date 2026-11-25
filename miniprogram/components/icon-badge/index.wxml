@@ -1,0 +1,8 @@
+<view class="badge" style="width:{{size}}rpx;height:{{size * 1.25}}rpx;">
+  <image
+    class="sprite"
+    src="{{sprite}}"
+    webp
+    style="width:{{size * 5}}rpx;height:{{size * 2.5}}rpx;left:{{-col * size}}rpx;top:{{-row * size * 1.25}}rpx;"
+  />
+</view>

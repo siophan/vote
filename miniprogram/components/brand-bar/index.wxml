@@ -1,0 +1,16 @@
+<view class="brand-bar" style="padding-top:{{statusBar}}px;">
+  <view class="brand-inner" style="height:{{navHeight}}px;padding-right:{{rightGap}}px;">
+    <view class="brand-lockup">
+      <view class="brand-mark"><image src="{{logo}}" mode="aspectFit" webp /></view>
+      <view>
+        <view class="brand-name">龄花里</view>
+        <view class="brand-sub">银龄花开，相聚龄花里</view>
+      </view>
+    </view>
+    <view class="me-btn" bindtap="onMine" aria-label="我的">
+      <image wx:if="{{avatarUrl}}" class="me-avatar" src="{{avatarUrl}}" mode="aspectFill" />
+      <image wx:else class="me-icon" src="{{userIcon}}" />
+    </view>
+  </view>
+</view>
+<view style="height:{{statusBar + navHeight}}px;"></view>

@@ -1,0 +1,49 @@
+<view class="page-wrap with-tab">
+  <view class="section-head page-head">
+    <view>
+      <view class="section-title">龄花优选</view>
+      <view class="section-note">好供应链，慢慢挑，安心换</view>
+    </view>
+    <button class="btn btn-outline btn-small" hover-class="btn-hover" bindtap="goOrders">我的订单</button>
+  </view>
+
+  <view class="profile-card soft">
+    <view class="profile-top">
+      <view>
+        <view class="profile-name">小红花可用余额</view>
+        <view class="profile-sub">参加赛事、投稿通过、收到送花都能攒花</view>
+      </view>
+      <view class="flower-balance"><text class="value">{{balanceText}}<text class="unit">朵</text></text></view>
+    </view>
+  </view>
+
+  <view class="section">
+    <scroll-view class="chip-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view wx:for="{{categories}}" wx:key="*this" class="chip {{category === item ? 'active' : ''}}" data-name="{{item}}" bindtap="setCategory">{{item}}</view>
+    </scroll-view>
+  </view>
+
+  <view wx:if="{{error}}" class="empty">{{error}}</view>
+  <view wx:elif="{{loading && !products.length}}" class="empty">正在加载商品…</view>
+  <view wx:elif="{{!products.length}}" class="empty">这个分类还没有商品</view>
+  <view class="grid-2 mall-grid">
+    <view class="mall-card" wx:for="{{products}}" wx:key="id">
+      <view class="mall-visual"><image src="{{item.image_url}}" mode="aspectFill" webp lazy-load /></view>
+      <view class="mall-content">
+        <view class="mall-name">{{item.name}}</view>
+        <view class="mall-desc">{{item.subtitle}}</view>
+        <view class="mall-foot">
+          <text class="price">{{item.priceText}} 朵</text>
+          <button
+            class="btn btn-primary btn-small"
+            hover-class="btn-hover"
+            disabled="{{item.stock <= 0}}"
+            loading="{{redeemingId === item.id}}"
+            data-index="{{index}}"
+            bindtap="redeem"
+          >{{item.stock <= 0 ? '已兑完' : (item.kind === 'charity' ? '支持' : '兑换')}}</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

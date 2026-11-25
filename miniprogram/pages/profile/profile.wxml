@@ -1,0 +1,32 @@
+<view class="page-wrap plain">
+  <view class="avatar-block">
+    <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+      <image wx:if="{{avatarUrl}}" class="avatar-img" src="{{avatarUrl}}" mode="aspectFill" />
+      <image wx:else class="avatar-ph" src="{{icons.user}}" />
+    </button>
+    <view class="avatar-tip">{{uploading ? '头像上传中…' : '点击更换头像'}}</view>
+  </view>
+
+  <view class="field">
+    <text class="field-label">昵称</text>
+    <input class="input" type="nickname" value="{{nickname}}" maxlength="20" placeholder="填写昵称" placeholder-class="placeholder" bindinput="onNickname" bindblur="onNickname" />
+  </view>
+
+  <view class="field">
+    <text class="field-label">所在城市与区县（用于同城赛事和榜单）</text>
+    <picker mode="region" level="district" value="{{region}}" bindchange="onRegion">
+      <view class="picker-box">
+        <text wx:if="{{region.length}}">{{region[0]}} {{region[1]}} {{region[2]}}</text>
+        <text wx:else class="placeholder">选择省 / 市 / 区</text>
+        <image class="ico" src="{{icons.chevron}}" />
+      </view>
+    </picker>
+  </view>
+
+  <view class="field">
+    <text class="field-label">社区 / 小区（选填）</text>
+    <input class="input" value="{{community}}" maxlength="30" placeholder="例如：翠苑一区" placeholder-class="placeholder" bindinput="onCommunity" />
+  </view>
+
+  <button class="btn btn-primary btn-block save" hover-class="btn-hover" loading="{{saving}}" bindtap="save">保存</button>
+</view>

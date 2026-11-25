@@ -1,0 +1,17 @@
+<view class="page-wrap plain">
+  <view wx:if="{{error}}" class="empty">{{error}}</view>
+  <view wx:elif="{{loading}}" class="empty">正在加载…</view>
+  <view wx:elif="{{!works.length}}" class="empty">
+    <view>还没有投稿作品</view>
+    <button class="btn btn-primary btn-small go" hover-class="btn-hover" bindtap="goSubmit">去投稿</button>
+  </view>
+  <view class="list-card" wx:for="{{works}}" wx:key="id" data-id="{{item.id}}" bindtap="open">
+    <view class="list-row">
+      <view class="list-title ellipsis title">{{item.title}}</view>
+      <text class="tag {{item.statusInfo.tone}}">{{item.statusInfo.text}}</text>
+    </view>
+    <view class="list-sub">{{item.event_title}} · {{item.created}}</view>
+    <view wx:if="{{item.status === 'rejected' && item.reject_reason}}" class="reason">未通过原因：{{item.reject_reason}}</view>
+    <view wx:if="{{item.status === 'approved'}}" class="flower-count stat-line">✿ 已收到 {{item.flowers}} 朵小红花</view>
+  </view>
+</view>

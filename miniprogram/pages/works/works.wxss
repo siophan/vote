@@ -1,0 +1,5 @@
+.page-wrap.plain { padding-top: 28rpx; }
+.title { flex: 1; margin-right: 16rpx; }
+.reason { margin-top: 14rpx; padding: 14rpx 18rpx; border-radius: 18rpx; background: #f8e2d8; color: #9d5139; font-size: 24rpx; }
+.stat-line { margin-top: 14rpx; font-size: 24rpx; }
+.go { margin-top: 28rpx; }

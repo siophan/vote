@@ -1,0 +1,46 @@
+<view class="page-wrap plain">
+  <view class="profile-card" wx:if="{{user}}">
+    <view class="profile-top">
+      <view class="who">
+        <view class="avatar me-avatar" data-url="/pages/profile/profile" bindtap="go">
+          <image wx:if="{{user.avatar_url}}" src="{{user.avatar_url}}" mode="aspectFill" />
+          <image wx:else class="ico" src="{{icons.user}}" />
+        </view>
+        <view>
+          <view class="profile-name">{{user.nickname}}</view>
+          <view class="profile-sub">{{user.city || '未设置城市'}}{{user.community ? ' · ' + user.community : ''}} · 已参与 {{user.enrolled_count}} 场赛事</view>
+        </view>
+      </view>
+      <view class="flower-balance"><text class="label">小红花</text><text class="value">{{balance}}</text></view>
+    </view>
+    <view class="progress"><view class="progress-bar" style="width:{{percent}}%;"></view></view>
+    <view class="milestone">
+      <text>{{user.level_name}}</text>
+      <text>{{user.next_level_value ? '成长值 ' + user.growth_value + ' / ' + user.next_level_value : '成长值 ' + user.growth_value}}</text>
+    </view>
+  </view>
+
+  <view class="section grid-2">
+    <view class="mini-card" data-url="/pages/works/works" bindtap="go"><image class="mini-icon" src="{{icons.film}}" /><text class="mini-title">我的作品</text><text class="mini-desc">查看审核状态与收到的小红花。</text></view>
+    <view class="mini-card" data-url="/pages/profile/profile" bindtap="go"><image class="mini-icon" src="{{icons.edit}}" /><text class="mini-title">编辑资料</text><text class="mini-desc">头像、昵称和所在城市社区。</text></view>
+    <view class="mini-card" data-url="/pages/orders/orders" bindtap="go"><image class="mini-icon" src="{{icons.box}}" /><text class="mini-title">我的订单</text><text class="mini-desc">查看兑换、发货与公益记录。</text></view>
+    <view class="mini-card" data-url="/pages/ledger/ledger" bindtap="go"><image class="mini-icon" src="{{icons.list}}" /><text class="mini-title">小红花账本</text><text class="mini-desc">每一笔收入和支出都可追溯。</text></view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <view>
+        <view class="section-title">我报名的赛事</view>
+        <view class="section-note">{{enrollments.length ? '共 ' + enrollments.length + ' 场' : '还没有报名赛事'}}</view>
+      </view>
+    </view>
+    <view class="list-card enroll" wx:for="{{enrollments}}" wx:key="id" data-id="{{item.id}}" bindtap="openEvent">
+      <image class="enroll-cover" src="{{item.cover_url}}" mode="aspectFill" webp lazy-load />
+      <view class="enroll-main">
+        <view class="list-title ellipsis">{{item.title}}</view>
+        <view class="list-sub">{{item.category}} · {{item.status_text}}</view>
+      </view>
+      <image class="ico" src="{{icons.chevron}}" />
+    </view>
+  </view>
+</view>

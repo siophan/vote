@@ -1,0 +1,68 @@
+<view class="page-wrap with-tab">
+  <view class="section-head page-head">
+    <view>
+      <view class="section-title">投稿参赛</view>
+      <view class="section-note">用自己的视频号作品，参与龄花里的主题赛事</view>
+    </view>
+    <button class="btn btn-outline btn-small" hover-class="btn-hover" bindtap="goWorks">我的作品</button>
+  </view>
+
+  <view class="upload-zone">
+    <view class="upload-icon"><image src="{{icons.film}}" /></view>
+    <view class="zone-title">提交一条你的视频号作品</view>
+    <view class="zone-desc">先把视频发布到你的视频号，再复制视频链接粘贴到这里。平台审核通过后，会生成带作者归属的作品页。</view>
+
+    <view class="form">
+      <view class="field">
+        <text class="field-label">参加的赛事</text>
+        <view wx:if="{{loadError}}" class="picker-box" bindtap="loadEvents"><text class="placeholder">{{loadError}}，点此重试</text></view>
+        <picker wx:else mode="multiSelector" range="{{columns}}" value="{{pickerIndex}}" bindcolumnchange="onColumnChange" bindchange="onPick">
+          <view class="picker-box">
+            <text wx:if="{{selected}}">{{selected.category}} · {{selected.title}}</text>
+            <text wx:else class="placeholder">按主题选择赛事</text>
+            <image class="ico" src="{{icons.chevron}}" />
+          </view>
+        </picker>
+      </view>
+
+      <view class="field">
+        <text class="field-label">作品标题</text>
+        <input class="input" value="{{title}}" maxlength="40" placeholder="例如：老周的二胡《赛马》" placeholder-class="placeholder" bindinput="onTitle" />
+      </view>
+
+      <view class="field">
+        <text class="field-label">视频号视频链接</text>
+        <view class="url-row">
+          <input class="input" value="{{videoUrl}}" placeholder="https://weixin.qq.com/sph/…" placeholder-class="placeholder" bindinput="onUrl" />
+          <button class="btn btn-outline btn-small paste" hover-class="btn-hover" bindtap="paste">粘贴</button>
+        </view>
+        <view wx:if="{{linkError}}" class="link-error">{{linkError}}</view>
+        <view class="field-hint">在视频号作品右上角「…」→「复制链接」</view>
+      </view>
+
+      <view class="field">
+        <text class="field-label">作品介绍（选填）</text>
+        <textarea class="textarea" value="{{description}}" maxlength="300" placeholder="说说这条视频背后的故事" placeholder-class="placeholder" bindinput="onDesc" />
+      </view>
+
+      <view class="rights" bindtap="toggleAgree">
+        <view class="checkbox {{agreed ? 'on' : ''}}">{{agreed ? '✓' : ''}}</view>
+        <text>我确认拥有作品的发布权，并同意平台在赛事范围内展示、分享和接受小红花支持。</text>
+      </view>
+
+      <button class="btn btn-primary btn-block submit" hover-class="btn-hover" loading="{{submitting}}" bindtap="submit">提交作品</button>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <view>
+        <view class="section-title">投稿流程</view>
+        <view class="section-note">提交后由平台审核，结果会出现在「我的作品」</view>
+      </view>
+    </view>
+    <view class="mini-card step"><text class="mini-num">01</text><text class="mini-title">选择赛事</text><text class="mini-desc">按主题、城市、区县或小区找到要参加的比赛，投稿会自动报名。</text></view>
+    <view class="mini-card step"><text class="mini-num">02</text><text class="mini-title">粘贴链接与审核</text><text class="mini-desc">提交视频号作品链接，平台核对作者身份、内容和赛事用途。</text></view>
+    <view class="mini-card step"><text class="mini-num">03</text><text class="mini-title">生成作品页</text><text class="mini-desc">作品页包含作者、来源、榜单和送花入口，可分享给亲友。</text></view>
+  </view>
+</view>

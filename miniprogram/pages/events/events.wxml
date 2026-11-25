@@ -1,0 +1,72 @@
+<view class="page-wrap with-tab">
+  <view class="section-head page-head">
+    <view>
+      <view class="section-title">赛事中心</view>
+      <view class="section-note">{{summary.category_count}} 大主题，{{summary.event_count}} 种玩法，按城市、区县和小区参与</view>
+    </view>
+    <button class="btn btn-outline btn-small" hover-class="btn-hover" bindtap="goSubmit">我要投稿</button>
+  </view>
+
+  <view class="grid-3 summary">
+    <view class="stat"><text class="stat-value">{{summary.event_count}}</text><text class="stat-label">赛事玩法</text></view>
+    <view class="stat"><text class="stat-value">{{summary.category_count}}</text><text class="stat-label">主题分类</text></view>
+    <view class="stat"><text class="stat-value">{{summary.geo_levels}}</text><text class="stat-label">地域层级</text></view>
+  </view>
+
+  <view class="section-head sub-head">
+    <view>
+      <view class="section-title">分类封面</view>
+      <view class="section-note">每一类都可以成为独立赛季</view>
+    </view>
+  </view>
+  <view class="grid-2">
+    <view class="category-card" wx:for="{{categories}}" wx:key="name" data-filter="{{item.name}}" bindtap="setFilter">
+      <image class="category-img" src="{{item.image_url}}" mode="aspectFill" webp lazy-load />
+      <view class="category-shade"></view>
+      <view class="category-badge"><icon-badge icon-key="{{item.icon_key}}" size="{{56}}" /></view>
+      <view class="category-copy">
+        <view class="category-name">{{item.name}}</view>
+        <view class="category-note">{{item.note}} · {{item.event_count}} 种玩法</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="tools" id="catalog">
+    <scroll-view class="chip-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="chip {{filter === '全部' ? 'active' : ''}}" data-filter="全部" bindtap="setFilter">全部</view>
+      <view wx:for="{{categories}}" wx:key="name" class="chip {{filter === item.name ? 'active' : ''}}" data-filter="{{item.name}}" bindtap="setFilter">{{item.name}}</view>
+    </scroll-view>
+    <view class="catalog-count">{{filter === '全部' ? '正在展示全部 ' + total + ' 种赛事玩法' : '正在展示「' + filter + '」分类 · ' + total + ' 种玩法'}}</view>
+  </view>
+
+  <view class="catalog">
+    <event-card wx:for="{{events}}" wx:key="id" event="{{item}}" variant="catalog" />
+    <view wx:if="{{error}}" class="empty">{{error}}</view>
+    <view wx:elif="{{loading}}" class="loading-more">正在加载…</view>
+    <view wx:elif="{{!hasMore && events.length}}" class="loading-more">已经到底了</view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <view>
+        <view class="section-title">视频号精选入口</view>
+        <view class="section-note">先看内容方向，再把自己的视频带进赛事</view>
+      </view>
+    </view>
+    <view class="video-card" wx:for="{{showcase}}" wx:key="title" data-index="{{index}}" bindtap="onShowcase">
+      <view class="video-cover">
+        <image src="{{item.coverUrl}}" mode="aspectFill" webp lazy-load />
+        <view class="play">▶</view>
+      </view>
+      <view class="video-info">
+        <view class="video-title">{{item.title}}</view>
+        <view class="video-desc">{{item.desc}}</view>
+        <view class="video-meta">
+          <text class="video-source">{{item.source}}</text>
+          <text class="source-link">{{item.url ? '复制来源' : '看同类赛事'}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="note-box">视频号作品在微信内播放。投稿时粘贴视频号视频链接，审核通过后即可在作品页跳转观看。</view>
+  </view>
+</view>

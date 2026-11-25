@@ -1,0 +1,6 @@
+.who { display: flex; align-items: center; flex: 1; min-width: 0; }
+.me-avatar { width: 104rpx; height: 104rpx; border-radius: 34rpx; margin-right: 24rpx; }
+.enroll { display: flex; align-items: center; padding: 18rpx; }
+.enroll-cover { width: 160rpx; height: 110rpx; border-radius: 20rpx; flex: 0 0 auto; background: #e8d9bf; }
+.enroll-main { flex: 1; min-width: 0; margin: 0 20rpx; }
+.enroll .ico { width: 28rpx; height: 28rpx; }

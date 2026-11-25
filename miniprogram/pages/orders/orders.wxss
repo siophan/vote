@@ -1,0 +1,9 @@
+.page-wrap.plain { padding-top: 28rpx; }
+.no-top { margin-top: 0; }
+.order-main { display: flex; align-items: center; margin-top: 20rpx; }
+.order-img { width: 128rpx; height: 128rpx; border-radius: 24rpx; background: #eee0ca; flex: 0 0 auto; }
+.order-info { flex: 1; margin-left: 24rpx; }
+.price { color: var(--orange); font-weight: 900; }
+.address { margin-top: 18rpx; padding: 16rpx 20rpx; border-radius: 20rpx; background: #f5efe4; color: var(--muted); font-size: 24rpx; line-height: 1.55; }
+.actions { display: flex; justify-content: flex-end; margin-top: 20rpx; }
+.go { margin-top: 28rpx; }

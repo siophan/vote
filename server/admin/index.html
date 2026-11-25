@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>龄花里运营后台</title>
+  <link rel="stylesheet" href="/admin/app.css">
+</head>
+<body>
+  <section id="login" class="login" hidden>
+    <form id="login-form" class="login-card">
+      <div class="brand"><span class="brand-mark">龄</span>龄花里运营后台</div>
+      <label>管理员令牌
+        <input id="login-token" type="password" autocomplete="current-password" placeholder="X-Admin-Token" required>
+      </label>
+      <p id="login-error" class="error" hidden></p>
+      <button class="btn primary block" type="submit">进入后台</button>
+      <p class="hint">令牌即服务端环境变量 <code>ADMIN_TOKEN</code>，只保存在本浏览器。</p>
+    </form>
+  </section>
+
+  <div id="shell" class="shell" hidden>
+    <aside class="side">
+      <div class="brand"><span class="brand-mark">龄</span>运营后台</div>
+      <nav id="nav">
+        <a href="#overview" data-tab="overview">概览</a>
+        <a href="#submissions" data-tab="submissions">投稿审核 <b class="count" data-count="pending_submissions"></b></a>
+        <a href="#orders" data-tab="orders">订单发货 <b class="count" data-count="pending_shipments"></b></a>
+        <a href="#events" data-tab="events">赛事运营</a>
+        <a href="#users" data-tab="users">用户与小红花</a>
+      </nav>
+      <button id="logout" class="btn ghost small" type="button">退出</button>
+    </aside>
+    <main id="main" class="main"></main>
+  </div>
+
+  <dialog id="dialog"></dialog>
+  <div id="toast" class="toast" hidden></div>
+  <script src="/admin/app.js"></script>
+</body>
+</html>

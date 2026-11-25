@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "赛事中心",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "event-card": "/components/event-card/index",
+    "icon-badge": "/components/icon-badge/index"
+  }
+}

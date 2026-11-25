@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/events/events",
+    "pages/submit/submit",
+    "pages/flowers/flowers",
+    "pages/mall/mall",
+    "pages/event-detail/event-detail",
+    "pages/work/work",
+    "pages/mine/mine",
+    "pages/works/works",
+    "pages/orders/orders",
+    "pages/ledger/ledger",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#f8f0e4",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "龄花里",
+    "backgroundColor": "#f8f0e4",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#9a8976",
+    "selectedColor": "#4b582c",
+    "backgroundColor": "#fffaf2",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/home/home", "text": "发现" },
+      { "pagePath": "pages/events/events", "text": "赛事" },
+      { "pagePath": "pages/submit/submit", "text": "投稿" },
+      { "pagePath": "pages/flowers/flowers", "text": "小红花" },
+      { "pagePath": "pages/mall/mall", "text": "商城" }
+    ]
+  },
+  "usingComponents": {},
+  "requiredPrivateInfos": ["chooseAddress"],
+  "lazyCodeLoading": "requiredComponents",
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

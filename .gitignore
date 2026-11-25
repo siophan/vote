@@ -1,0 +1,4 @@
+.DS_Store
+.claude/settings.local.json
+# ui/ is a separate git repository (design prototype)
+ui/
