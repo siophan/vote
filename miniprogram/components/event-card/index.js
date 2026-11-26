@@ -29,8 +29,7 @@ Component({
       const event = this.data.event
       if (!event || !event.id) return
       if (!event.enrolled) return this.open()
-      getApp().globalData.submitEventId = event.id
-      wx.switchTab({ url: '/pages/submit/submit' })
+      wx.navigateTo({ url: `/pages/submit/submit?event_id=${event.id}` })
     }
   }
 })

@@ -33,13 +33,10 @@ Page({
     }
   },
 
-  onLoad() {
+  // 二级页：从赛事详情 / 赛事卡片进来时带 ?event_id=，预选该赛事
+  onLoad(options) {
+    this.preselectId = Number(options && options.event_id) || null
     this.loadEvents()
-  },
-
-  onShow() {
-    ui.syncTab(this, 2)
-    this.applyPreselect()
   },
 
   loadEvents() {
@@ -63,10 +60,9 @@ Page({
   },
 
   applyPreselect() {
-    const app = getApp()
-    const id = app.globalData.submitEventId
+    const id = this.preselectId
     if (!id || !this.data.groups.length) return
-    app.globalData.submitEventId = null
+    this.preselectId = null
     this.data.groups.forEach((group, gi) => {
       group.events.forEach((event, ei) => {
         if (event.id === id) {

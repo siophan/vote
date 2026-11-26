@@ -10,7 +10,6 @@ const THUMB_HEIGHTS = [284, 376, 316]
 Page({
   data: {
     hero: assets.hero,
-    avatarUrl: '',
     left: [],
     right: [],
     rewards: [],
@@ -29,12 +28,11 @@ Page({
 
   onShow() {
     ui.syncTab(this, 0)
-    // 首次进入时登录可能还没完成，等 /me 回来再显示头像
+    // 预取当前用户，供小红花等页面复用
     api
       .get('/me', null, { auth: true })
       .then((user) => {
         getApp().globalData.user = user
-        this.setData({ avatarUrl: user.avatar_url || '' })
       })
       .catch(() => {})
     // 从详情页报名后回来，刷新卡片上的「已报名」
@@ -68,7 +66,7 @@ Page({
     wx.switchTab({ url: '/pages/events/events' })
   },
   goSubmit() {
-    wx.switchTab({ url: '/pages/submit/submit' })
+    wx.navigateTo({ url: '/pages/submit/submit' })
   },
   goFlowers() {
     wx.switchTab({ url: '/pages/flowers/flowers' })

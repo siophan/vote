@@ -126,8 +126,7 @@ Page({
   },
 
   goSubmit() {
-    getApp().globalData.submitEventId = this.data.id
-    wx.switchTab({ url: '/pages/submit/submit' })
+    wx.navigateTo({ url: `/pages/submit/submit?event_id=${this.data.id}` })
   },
 
   openWork(e) {

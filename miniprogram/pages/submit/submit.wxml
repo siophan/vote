@@ -1,4 +1,4 @@
-<view class="page-wrap with-tab">
+<view class="page-wrap plain">
   <view class="section-head page-head">
     <view>
       <view class="section-title">投稿参赛</view>

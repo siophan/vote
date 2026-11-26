@@ -37,7 +37,7 @@ Page({
   },
 
   onShow() {
-    ui.syncTab(this, 4)
+    ui.syncTab(this, 3)
     const app = getApp()
     if (app.globalData.mallCategory) {
       this.setData({ category: app.globalData.mallCategory })

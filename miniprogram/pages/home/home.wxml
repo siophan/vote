@@ -1,4 +1,4 @@
-<brand-bar avatar-url="{{avatarUrl}}" />
+<brand-bar />
 
 <view class="page-wrap with-tab">
   <view class="hero">
@@ -34,7 +34,7 @@
     </view>
     <view wx:if="{{error}}" class="empty"><view>{{error}}</view><view>下拉可重新加载</view></view>
     <view wx:elif="{{loading}}" class="empty">正在加载赛事…</view>
-    <view wx:else class="waterfall">
+    <view wx:else class="home-waterfall">
       <view class="col">
         <event-card wx:for="{{left}}" wx:key="id" event="{{item}}" variant="waterfall" thumb-height="{{item.thumbHeight}}" />
       </view>

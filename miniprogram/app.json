@@ -29,9 +29,9 @@
     "list": [
       { "pagePath": "pages/home/home", "text": "发现" },
       { "pagePath": "pages/events/events", "text": "赛事" },
-      { "pagePath": "pages/submit/submit", "text": "投稿" },
       { "pagePath": "pages/flowers/flowers", "text": "小红花" },
-      { "pagePath": "pages/mall/mall", "text": "商城" }
+      { "pagePath": "pages/mall/mall", "text": "商城" },
+      { "pagePath": "pages/mine/mine", "text": "我的" }
     ]
   },
   "usingComponents": {},

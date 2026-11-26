@@ -39,7 +39,7 @@
     <view class="catalog-count">{{filter === '全部' ? '正在展示全部 ' + total + ' 种赛事玩法' : '正在展示「' + filter + '」分类 · ' + total + ' 种玩法'}}</view>
   </view>
 
-  <view class="catalog">
+  <view class="catalog-list">
     <event-card wx:for="{{events}}" wx:key="id" event="{{item}}" variant="catalog" />
     <view wx:if="{{error}}" class="empty">{{error}}</view>
     <view wx:elif="{{loading}}" class="loading-more">正在加载…</view>

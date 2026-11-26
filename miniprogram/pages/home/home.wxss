@@ -32,9 +32,10 @@
 .stat-strip .stat-value { font-size: 32rpx; white-space: nowrap; }
 .stat-strip .stat-label { font-size: 22rpx; line-height: 1.4; margin-top: 10rpx; }
 
-.waterfall { display: flex; align-items: flex-start; }
-.waterfall .col { flex: 1; min-width: 0; }
-.waterfall .col + .col { margin-left: 24rpx; }
+/* 容器类名不能用 waterfall：event-card 开了 addGlobalClass，页面里的 .waterfall 会套到卡片根节点上 */
+.home-waterfall { display: flex; align-items: flex-start; }
+.home-waterfall .col { flex: 1; min-width: 0; }
+.home-waterfall .col + .col { margin-left: 24rpx; }
 
 .reward-card {
   position: relative;

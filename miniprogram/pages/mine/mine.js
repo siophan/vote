@@ -20,6 +20,7 @@ Page({
   },
 
   onShow() {
+    ui.syncTab(this, 4)
     Promise.all([api.get('/me', null, { auth: true }), api.get('/me/enrollments', null, { auth: true })])
       .then(([user, enrollments]) => {
         getApp().globalData.user = user

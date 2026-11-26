@@ -106,7 +106,7 @@ Page({
   },
 
   goSubmit() {
-    wx.switchTab({ url: '/pages/submit/submit' })
+    wx.navigateTo({ url: '/pages/submit/submit' })
   },
 
   onShowcase(e) {

@@ -16,7 +16,7 @@ UI 还原自 `ui/dist/index.html`，接口契约见 `docs/design.md`。
 ```
 config.js              各环境 API_BASE / ASSET_BASE（图片 CDN 前缀）
 app.js / app.wxss      全局：静默登录、设计变量与通用样式（px×2 → rpx）
-custom-tab-bar/        自定义底部导航（发现 / 赛事 / 投稿 / 小红花 / 商城）
+custom-tab-bar/        自定义底部导航（发现 / 赛事 / 小红花 / 商城 / 我的）
 components/
   brand-bar/           首页品牌导航栏（自定义导航，避让胶囊按钮）
   event-card/          赛事卡片（waterfall 首页瀑布流 / catalog 赛事中心）

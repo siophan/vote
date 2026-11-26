@@ -1,4 +1,4 @@
-<view class="page-wrap plain">
+<view class="page-wrap with-tab">
   <view class="profile-card" wx:if="{{user}}">
     <view class="profile-top">
       <view class="who">

@@ -21,16 +21,3 @@
 .brand-mark image { width: 100%; height: 100%; }
 .brand-name { font-weight: 900; letter-spacing: 0.04em; font-size: 34rpx; line-height: 1.2; }
 .brand-sub { color: var(--muted); font-size: 22rpx; }
-.me-btn {
-  width: 68rpx;
-  height: 68rpx;
-  border: 2rpx solid var(--line);
-  border-radius: 50%;
-  background: rgba(255, 250, 242, 0.84);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-.me-icon { width: 36rpx; height: 36rpx; }
-.me-avatar { width: 100%; height: 100%; }

@@ -30,7 +30,7 @@ Page({
   },
 
   onShow() {
-    ui.syncTab(this, 3)
+    ui.syncTab(this, 2)
     this.load()
   },
 
@@ -118,6 +118,6 @@ Page({
     wx.pageScrollTo({ selector: '#ranking', offsetTop: -12, duration: 260 })
   },
   goMine() {
-    wx.navigateTo({ url: '/pages/mine/mine' })
+    wx.switchTab({ url: '/pages/mine/mine' })
   }
 })

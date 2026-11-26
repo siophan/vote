@@ -24,7 +24,7 @@
 
 .tools { margin-top: 36rpx; padding-top: 8rpx; }
 .catalog-count { margin-top: 20rpx; color: var(--muted); font-size: 24rpx; }
-.catalog { margin-top: 32rpx; }
+.catalog-list { margin-top: 32rpx; }
 
 .video-card {
   display: flex;
