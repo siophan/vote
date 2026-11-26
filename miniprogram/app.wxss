@@ -54,6 +54,10 @@ button::after { border: 0; }
 .btn-outline { border-color: var(--line); background: var(--paper); color: var(--olive-dark); }
 .btn-small { min-height: 72rpx; padding: 0 26rpx; font-size: 24rpx; }
 .btn-block { display: flex; width: 100%; }
+/* 微信内置 button:not([size=mini]) { width: 184px } 优先级高于 .btn。
+   这里用同等优先级 (0,1,1)、靠书写顺序覆盖回内容宽度；页面里 `.xx .btn` 这类两级选择器仍能再改宽度 */
+button.btn { width: auto; }
+button.btn-block { width: 100%; }
 .btn[disabled] { opacity: 0.5; }
 .btn-primary[disabled] { background: var(--orange); color: #fffaf2; }
 .btn-olive[disabled] { background: var(--olive); color: #fffaf2; }
