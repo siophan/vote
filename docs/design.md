@@ -6,7 +6,7 @@ UI 来源：`ui/dist/index.html`（H5 原型）。本文件是小程序（`minip
 
 - 原生微信小程序，只做用户端：发现、赛事、赛事详情、投稿、小红花、商城、我的（+ 我的作品 / 我的订单 / 小红花账本 / 编辑资料）。
 - 小程序不做原型里的「封面管理」页；运营使用后端托管的网页后台 `/admin/`（调用 admin API，`X-Admin-Token`），设计见 `docs/superpowers/specs/2026-11-26-admin-console-design.md`。
-- 投稿不上传视频，只提交**视频号视频链接**。审核**通过时必须**补充 `feed_token`（用于 `<channel-video>`），或 `finder_user_name` + `feed_id`（用于 `wx.openChannelsActivity`），否则 400 `请填写视频 token，或视频号 ID 与 feed_id`；驳回不要求。
+- 投稿不上传视频，只提交**视频号视频链接**。审核**通过时必须**补充 `feed_token`（用于 `<channel-video>`），否则 400 `请填写视频 token`。`<channel-video>` 只认带 `token/` 前缀的 token（不带报 `fail 1416106`），后端保存时统一补前缀（迁移 0004 补齐旧数据）；token 和小程序 AppID 绑定，别的小程序的 token 也报 1416106；驳回不要求。`finder_user_name` / `feed_id` 字段保留但后台不再填写。已通过作品用 PATCH 修改时不能清空 `feed_token`。作品页：有 `feed_token` 时用 `<channel-video>` 页内播放（基础库 ≥ 2.31.1，非同主体不能自动播放）；没有 token 或播放器报错时退回复制链接，开发版 / 体验版会显示报错原因。
 - 图片全部走网络地址：后端返回完整 URL，前缀由 `ASSET_BASE_URL` 配置。开发期由后端 `/static/assets/` 直接托管；上线换 CDN。
 
 ## 技术栈
@@ -28,7 +28,7 @@ UI 来源：`ui/dist/index.html`（H5 原型）。本文件是小程序（`minip
 
 - 送花：不能送给自己的作品；n 取 1–99；只能送给已通过审核的作品；同一送花人给同一作者每天最多 20 朵（超出 400，提示今天还能送几朵）；同时累加 `submission.flower_count` 和 `event.flower_count`。
 - 「每天」按北京时间自然日（UTC+8）计算。上限常量在 `server/app/rules.py`：`ENROLL_BONUS_DAILY_LIMIT`、`DAILY_GIFT_LIMIT_PER_AUTHOR`。
-- 同一条视频链接（规范化后完全相同）全站只能对应一条「审核中 / 已通过」的投稿，跨用户、跨赛事都算；被驳回后可重新投稿。链接先规范化再比较：scheme / host 转小写，去掉默认端口、`#` 片段和末尾 `/`，path 和 query 保持原样。数据库有部分唯一索引 `uq_submissions_live_video` 兜底。同一视频的短链可能每次复制都不同，所以审核通过时还会比对运营补充的 `finder_user_name + feed_id` 或 `feed_token`；如果和另一条审核中或已通过的投稿相同，返回 400 `这条视频与作品 #N 是同一条视频，请驳回本条投稿`。自己重复投 → `这条视频已经投过稿了，同一条视频只能参加一个赛事`；别人已投 → `这条视频已被其他用户投稿，如有疑问请联系客服`。
+- 同一条视频链接（规范化后完全相同）全站只能对应一条「审核中 / 已通过」的投稿，跨用户、跨赛事都算；被驳回后可重新投稿。链接先规范化再比较：scheme / host 转小写，去掉默认端口、`#` 片段和末尾 `/`，path 和 query 保持原样。数据库有部分唯一索引 `uq_submissions_live_video` 兜底。同一视频的短链可能每次复制都不同，所以审核通过时还会比对运营补充的 `feed_token`（以及旧数据里的 `finder_user_name + feed_id`）；如果和另一条审核中或已通过的投稿相同，返回 400 `这条视频与作品 #N 是同一条视频，请驳回本条投稿`。自己重复投 → `这条视频已经投过稿了，同一条视频只能参加一个赛事`；别人已投 → `这条视频已被其他用户投稿，如有疑问请联系客服`。
 - 城市：新用户 `city` 为空（未设置）；写入和 `/rankings?city=` 查询都会去掉末尾的「市」（`杭州市` → `杭州`），所以地区选择器和手填的写法能对上。
 - 余额变动必须写 `flower_ledger`（`delta`, `reason`, `balance_after`, `ref_type`, `ref_id`），扣减时对 user 行加锁（`SELECT … FOR UPDATE`），余额不能为负。
 - 等级（按成长值）：0 银龄新人 / 300 社区新星 / 1000 银龄新星 / 3000 龄花达人 / 8000 龄花名家。
@@ -122,7 +122,7 @@ UI 来源：`ui/dist/index.html`（H5 原型）。本文件是小程序（`minip
 | POST | `/orders/{id}/cancel` | ✓ | – | `Order` |
 | GET | `/admin/stats` | admin | – | `{"pending_submissions", "pending_shipments", "users_today", "flowers_today"}` |
 | GET | `/admin/submissions` | admin | `?status=pending&q=&page=` | `{"items": Submission[], "total"}` |
-| POST | `/admin/submissions/{id}/review` | admin | `{"action": "approve|reject", "reason"?, "finder_user_name"?, "feed_id"?, "feed_token"?}`（approve 须有 token 或 ID+feed_id） | `Submission` |
+| POST | `/admin/submissions/{id}/review` | admin | `{"action": "approve|reject", "reason"?, "finder_user_name"?, "feed_id"?, "feed_token"?}`（approve 须有 feed_token） | `Submission` |
 | PATCH | `/admin/submissions/{id}` | admin | 任意 `finder_user_name, feed_id, feed_token` | `Submission` |
 | GET | `/admin/orders` | admin | `?status=pending_shipment&page=` | `{"items": Order + {"user_id", "user_nickname"}[], "total"}` |
 | POST | `/admin/orders/{id}/ship` | admin | `{"tracking_no"?: "..."}` | `Order` |

@@ -98,7 +98,7 @@ def test_admin_approve_grants_bonus_once(client):
     assert balance(client, h) == 110
     body = approve(client, sid, finder_user_name="sphABC", feed_id="export/xyz", feed_token="tok")
     assert body["status"] == "approved"
-    assert body["finder_user_name"] == "sphABC" and body["feed_id"] == "export/xyz" and body["feed_token"] == "tok"
+    assert body["finder_user_name"] == "sphABC" and body["feed_id"] == "export/xyz" and body["feed_token"] == "token/tok"
     assert balance(client, h) == 160
     approve(client, sid)  # re-approve: no second bonus
     assert balance(client, h) == 160
@@ -230,16 +230,18 @@ def test_same_feed_with_different_links_blocked_at_review(client):
     s2 = submit(client, b, event_id=2).json()["id"]  # another short link, same video
     approve(client, s1, finder_user_name="sphAuthor", feed_id="export/xyz")
     r = client.post(f"/api/v1/admin/submissions/{s2}/review",
-                    json={"action": "approve", "finder_user_name": "sphAuthor", "feed_id": "export/xyz"}, headers=ADMIN)
+                    json={"action": "approve", "finder_user_name": "sphAuthor", "feed_id": "export/xyz",
+                          "feed_token": "tok-s2"}, headers=ADMIN)
     assert r.status_code == 400 and r.json()["detail"] == f"这条视频与作品 #{s1} 是同一条视频，请驳回本条投稿"
     assert client.get(f"/api/v1/submissions/{s2}", headers=b).json()["status"] == "pending"
     assert balance(client, b) == 110  # no approval bonus
     # same check for feed_token
     s3 = submit(client, b, event_id=3).json()["id"]
-    approve(client, s1, feed_token="tok-1")
-    r = client.post(f"/api/v1/admin/submissions/{s3}/review", json={"action": "approve", "feed_token": "tok-1"},
+    approve(client, s1, feed_token="tok-1", finder_user_name="sphAuthor", feed_id="export/xyz")
+    r = client.post(f"/api/v1/admin/submissions/{s3}/review",
+                    json={"action": "approve", "feed_token": "tok-1", "finder_user_name": "sphOther", "feed_id": "export/o"},
                     headers=ADMIN)
-    assert r.status_code == 400
+    assert r.status_code == 400 and r.json()["detail"] == f"这条视频与作品 #{s1} 是同一条视频，请驳回本条投稿"
     # once the first is rejected the feed is free again
     client.post(f"/api/v1/admin/submissions/{s1}/review", json={"action": "reject", "reason": "x"}, headers=ADMIN)
     approve(client, s2, finder_user_name="sphAuthor", feed_id="export/xyz")

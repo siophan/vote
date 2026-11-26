@@ -193,7 +193,7 @@
 
   function renderSubmissions() {
     main.innerHTML = `<div class="page-head"><div><h1>投稿审核</h1>
-      <p class="hint">通过前必须补视频号信息：优先填「视频 token」（小程序内直接播放），或填「视频号 ID + feed_id」（跳转视频号）。</p></div></div>
+      <p class="hint">通过前必须填「视频 token」，作品页用它直接播放视频。</p></div></div>
       <div class="toolbar" id="sub-bar"></div><div class="list" id="sub-list"></div><div id="sub-pager"></div>`;
     const bar = $("#sub-bar");
     bar.append(seg([["pending", "待审核"], ["approved", "已通过"], ["rejected", "已驳回"], ["all", "全部"]], subState.status, (v) => {
@@ -226,27 +226,20 @@
   function feedSummary(s) {
     const parts = [];
     if (s.feed_token) parts.push(`视频 token：<b>${esc(s.feed_token)}</b>`);
-    if (s.finder_user_name || s.feed_id) parts.push(`视频号 ID：<b>${esc(s.finder_user_name || "—")}</b>　feed_id：<b>${esc(s.feed_id || "—")}</b>`);
     return parts.length ? parts.join("<br>") : "尚未填写视频号信息";
   }
 
   function feedFields(s) {
-    const useFinder = !s.feed_token && (s.finder_user_name || s.feed_id);
-    return `<label>视频 token <span class="hint">（必填，二选一）</span>
-        <input name="feed_token" value="${esc(s.feed_token || "")}" placeholder="从视频号助手复制的 feed-token"></label>
-      <details ${useFinder ? "open" : ""}><summary>没有 token？改填视频号 ID + feed_id</summary>
-        <div class="row">
-          <label>视频号 ID（finder_user_name）<input name="finder_user_name" value="${esc(s.finder_user_name || "")}" placeholder="sph..."></label>
-          <label>feed_id<input name="feed_id" value="${esc(s.feed_id || "")}" placeholder="export/..."></label>
-        </div></details>`;
+    return `<label>视频 token <span class="hint">（必填，作品页内播放）</span>
+        <input name="feed_token" value="${esc(s.feed_token || "")}" placeholder="手机打开该视频 →「在小程序中引用该视频」复制，带不带 token/ 前缀都行"></label>
+`;
   }
 
   /** Client-side mirror of the server rule, so operators get told before the round trip. */
   function readFeed(form) {
     const v = (n) => form.elements[n].value.trim();
-    const body = { feed_token: v("feed_token"), finder_user_name: v("finder_user_name"), feed_id: v("feed_id") };
-    const ok = body.feed_token || (body.finder_user_name && body.feed_id);
-    return { body, ok };
+    const body = { feed_token: v("feed_token") };
+    return { body, ok: !!body.feed_token, missing: "feed_token" };
   }
 
   function submissionCard(s) {
@@ -310,7 +303,7 @@
       let body;
       if (action === "approve") {
         const feed = readFeed(form);
-        if (!feed.ok) { err.textContent = "请填写视频 token，或视频号 ID 与 feed_id"; err.hidden = false; form.feed_token.focus(); return; }
+        if (!feed.ok) { err.textContent = "请填写视频 token"; err.hidden = false; form.elements[feed.missing].focus(); return; }
         body = { action, ...feed.body };
       } else {
         const reason = form.reason.value.trim();
@@ -337,7 +330,7 @@
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const feed = readFeed(form);
-      if (!feed.ok) { err.textContent = "请填写视频 token，或视频号 ID 与 feed_id"; err.hidden = false; return; }
+      if (!feed.ok) { err.textContent = "请填写视频 token"; err.hidden = false; form.elements[feed.missing].focus(); return; }
       const res = await busy(e.submitter, err, () => api(`/admin/submissions/${s.id}`, { method: "PATCH", body: feed.body }));
       if (res) { toast("已保存"); loadSubmissions(); }
     });

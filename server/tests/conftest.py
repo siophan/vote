@@ -96,13 +96,9 @@ def submit(client, headers, event_id: int = 1, url: str | None = None, title: st
     )
 
 
-FEED_KEYS = ("feed_token", "finder_user_name", "feed_id")
-
-
 def approve(client, submission_id: int, **extra):
-    """Approving requires 视频号 info; default to a token unique to the submission."""
-    if not any(k in extra for k in FEED_KEYS):
-        extra["feed_token"] = f"tok-auto-{submission_id}"
+    """Approving requires a feed_token; default to one unique to the submission."""
+    extra.setdefault("feed_token", f"tok-auto-{submission_id}")
     r = client.post(
         f"/api/v1/admin/submissions/{submission_id}/review",
         json={"action": "approve", **extra},

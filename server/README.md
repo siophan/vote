@@ -79,7 +79,7 @@ curl -X POST $BASE/submissions -H "Authorization: Bearer $TOKEN" -H 'Content-Typ
 后端启动后打开 <http://127.0.0.1:8001/admin/>，输入管理员令牌（即 `ADMIN_TOKEN`）登录。页面是 `server/admin/` 下的静态文件（原生 HTML/JS，无需构建），包含：
 
 - **概览**：待审核投稿、待发货订单、今日新用户、今日送出小红花（今日按北京时间）。
-- **投稿审核**：按状态筛选、搜索标题/作者；通过时**必须**填视频 token，或视频号 ID + feed_id；驳回需填原因；已通过的作品可修改视频号信息。
+- **投稿审核**：按状态筛选、搜索标题/作者；通过时**必须**填视频 token；驳回需填原因；已通过的作品可修改视频号信息。
 - **订单发货**：查看收货地址（可复制）、填快递单号发货。
 - **赛事运营**：搜索 / 按分类筛选，切换首页精选，编辑热度、奖励、封面等字段。
 - **用户与小红花**：按昵称或 ID 查用户，看账本，增减小红花（备注必填，记为「运营调整」，用户账本可见）。
@@ -98,11 +98,8 @@ curl "$BASE/admin/stats" -H "$ADMIN"
 # 待审核投稿（status: pending 默认 / approved / rejected / all；q 搜标题或作者昵称；分页 page/page_size）
 curl "$BASE/admin/submissions?status=pending" -H "$ADMIN"
 
-# 审核通过必须带视频号信息：feed_token，或 finder_user_name + feed_id（可沿用投稿上已有的值），
-# 否则 400「请填写视频 token，或视频号 ID 与 feed_id」。首次通过作者 +50 小红花 / +50 成长值，重复通过不再发放
-curl -X POST $BASE/admin/submissions/1/review -H "$ADMIN" -H 'Content-Type: application/json' \
-  -d '{"action":"approve","finder_user_name":"sphXXXX","feed_id":"export/XXXX"}'
-#   或用 <channel-video> 的 feed_token：
+# 审核通过必须带 feed_token（可沿用投稿上已有的值），否则 400「请填写视频 token」；
+# 首次通过作者 +50 小红花 / +50 成长值，重复通过不再发放
 curl -X POST $BASE/admin/submissions/1/review -H "$ADMIN" -H 'Content-Type: application/json' \
   -d '{"action":"approve","feed_token":"XXXX"}'
 

@@ -136,7 +136,8 @@ def main():
     check(any(s["id"] == sub["id"] for s in pend["items"]), "pending list has submission")
     admin.call("POST", f"/admin/submissions/{sub['id']}/review", {"action": "approve"}, expect=400)  # needs 视频号 info
     approved = admin.call("POST", f"/admin/submissions/{sub['id']}/review",
-                          {"action": "approve", "finder_user_name": "sphTest", "feed_id": "export/" + link[-10:]})
+                          {"action": "approve", "finder_user_name": "sphTest", "feed_id": "export/" + link[-10:],
+                           "feed_token": "smoke-" + link[-10:]})
     check(approved["status"] == "approved", "approved")
     check(alice.call("GET", "/me")["flower_balance"] == 160, "approval bonus +50")
 
@@ -167,7 +168,8 @@ def main():
     for i, eid in enumerate(more):
         extra = alice.call("POST", "/submissions", {"event_id": eid, "title": f"作品{i}", "video_url": f"{link}x{i}"})
         admin.call("POST", f"/admin/submissions/{extra['id']}/review",
-                   {"action": "approve", "feed_token": f"smoke-{link[-10:]}-{i}"})
+                   {"action": "approve", "feed_token": f"smoke-{link[-10:]}-{i}",
+                    "finder_user_name": "sphTest", "feed_id": f"export/{link[-10:]}-{i}"})
     bal = alice.call("GET", "/me")["flower_balance"]
     check(bal == 165 + 7 * 50 + 2 * 10, f"balance after approvals {bal}")
     alice.call("POST", "/orders", {"product_id": goods["id"]}, expect=400)  # goods needs address

@@ -1,6 +1,8 @@
+import pytest
+
 from tests.conftest import ADMIN, approve, balance, login, submit
 
-FEED_INFO_REQUIRED = "请填写视频 token，或视频号 ID 与 feed_id"
+FEED_INFO_REQUIRED = "请填写视频 token"
 
 
 def _review(client, sid, **body):
@@ -23,11 +25,21 @@ def test_approve_requires_feed_info(client):
     assert r.status_code == 200
 
 
-def test_approve_with_finder_only_rejected(client):
+def test_approve_requires_token_not_finder(client):
     sid = submit(client, login(client)).json()["id"]
-    r = _review(client, sid, finder_user_name="sphAuthor")
+    r = _review(client, sid, finder_user_name="sphAuthor", feed_id="export/1")
     assert r.status_code == 400 and r.json()["detail"] == FEED_INFO_REQUIRED
-    assert _review(client, sid, finder_user_name="sphAuthor", feed_id="export/1").status_code == 200
+    r = _review(client, sid, feed_token="tok-only")
+    assert r.status_code == 200
+    body = r.json()
+    # the refused review saved nothing; token alone is enough
+    assert body["feed_token"] == "token/tok-only" and body["finder_user_name"] is None and body["feed_id"] is None
+
+
+@pytest.mark.parametrize("optional", [{}, {"finder_user_name": "sph"}, {"feed_id": "e/1"}])
+def test_finder_fields_are_optional(client, optional):
+    sid = submit(client, login(client)).json()["id"]
+    assert _review(client, sid, feed_token=f"tok-{len(optional)}", **optional).status_code == 200
 
 
 def test_approve_uses_stored_feed_info(client):
@@ -35,7 +47,7 @@ def test_approve_uses_stored_feed_info(client):
     assert client.patch(f"/api/v1/admin/submissions/{sid}", json={"feed_token": "tok-stored"},
                         headers=ADMIN).status_code == 200
     r = _review(client, sid)
-    assert r.status_code == 200 and r.json()["feed_token"] == "tok-stored"
+    assert r.status_code == 200 and r.json()["feed_token"] == "token/tok-stored"
 
 
 def test_patch_feed_info(client):
@@ -58,9 +70,12 @@ def test_patch_cannot_clear_approved(client):
     approve(client, sid, feed_token="tok-x")
     r = client.patch(f"/api/v1/admin/submissions/{sid}", json={"feed_token": ""}, headers=ADMIN)
     assert r.status_code == 400 and r.json()["detail"] == FEED_INFO_REQUIRED
+    # the optional 视频号 ID / feed_id can be added and cleared
+    r = client.patch(f"/api/v1/admin/submissions/{sid}", json={"finder_user_name": "sph", "feed_id": "e/2"}, headers=ADMIN)
+    assert r.status_code == 200 and r.json()["feed_id"] == "e/2"
     r = client.patch(f"/api/v1/admin/submissions/{sid}",
-                     json={"feed_token": "", "finder_user_name": "sph", "feed_id": "e/2"}, headers=ADMIN)
-    assert r.status_code == 200 and r.json()["feed_token"] is None
+                     json={"feed_token": "tok-y", "finder_user_name": "", "feed_id": ""}, headers=ADMIN)
+    assert r.status_code == 200 and r.json()["feed_token"] == "token/tok-y" and r.json()["feed_id"] is None
 
 
 # ---------- lists & stats ----------
@@ -161,3 +176,19 @@ def test_admin_adjust_requires_note(client):
     for body in ({"delta": 5}, {"delta": 5, "note": "   "}, {"delta": 0, "note": "x"}, {"delta": 100001, "note": "x"}):
         assert client.post(f"/api/v1/admin/users/{uid}/flowers", json=body, headers=ADMIN).status_code == 400, body
     assert balance(client, h) == 100
+
+
+@pytest.mark.parametrize("raw,stored", [("ApYGPPNRF", "token/ApYGPPNRF"), (" token/ApYGPPNRF ", "token/ApYGPPNRF")])
+def test_feed_token_stored_with_prefix(client, raw, stored):
+    sid = submit(client, login(client)).json()["id"]
+    r = _review(client, sid, feed_token=raw)
+    assert r.status_code == 200 and r.json()["feed_token"] == stored
+
+
+def test_bare_and_prefixed_token_are_same_video(client):
+    a, b = login(client, "a"), login(client, "b")
+    s1 = submit(client, a).json()["id"]
+    s2 = submit(client, b, event_id=2).json()["id"]
+    approve(client, s1, feed_token="ApYGPPNRF")
+    r = _review(client, s2, feed_token="token/ApYGPPNRF")
+    assert r.status_code == 400 and r.json()["detail"] == f"这条视频与作品 #{s1} 是同一条视频，请驳回本条投稿"

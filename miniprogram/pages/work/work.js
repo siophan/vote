@@ -5,6 +5,12 @@ const ui = require('../../utils/ui')
 
 const COUNTS = [1, 5, 10, 20]
 
+// <channel-video> 只认带 "token/" 前缀的 feed-token（不带会报 fail 1416106）；后端已统一加前缀，这里再兜底
+function withTokenPrefix(token) {
+  if (!token) return null
+  return token.indexOf('token/') === 0 ? token : 'token/' + token
+}
+
 Page({
   data: {
     id: null,
@@ -18,11 +24,22 @@ Page({
     count: 1,
     sending: false,
     error: '',
-    icons: { play: icons.play.cream, user: icons.user.olive, flower: icons.flower.orange, link: icons.link.olive }
+    videoError: '',
+    showDebug: false,
+    icons: {
+      play: icons.play.cream,
+      user: icons.user.olive,
+      flower: icons.flower.orange,
+      link: icons.link.olive
+    }
   },
 
   onLoad(query) {
-    this.setData({ id: Number(query.id) })
+    let env = 'develop'
+    try {
+      env = wx.getAccountInfoSync().miniProgram.envVersion || 'develop'
+    } catch (e) {}
+    this.setData({ id: Number(query.id), showDebug: env !== 'release' })
     this.load()
   },
 
@@ -30,6 +47,7 @@ Page({
     return Promise.all([api.get(`/submissions/${this.data.id}`, null, { auth: true }), api.get('/me', null, { auth: true })])
       .then(([work, me]) => {
         getApp().globalData.user = me
+        work = Object.assign({}, work, { feed_token: withTokenPrefix(work.feed_token) })
         this.setData({
           work,
           isMine: work.author && work.author.id === me.id,
@@ -48,18 +66,6 @@ Page({
     this.setData({ count: Number(e.currentTarget.dataset.count) })
   },
 
-  watch() {
-    const work = this.data.work
-    if (work.finder_user_name && work.feed_id && wx.openChannelsActivity) {
-      wx.openChannelsActivity({
-        finderUserName: work.finder_user_name,
-        feedId: work.feed_id,
-        fail: () => this.copyLink()
-      })
-      return
-    }
-    this.copyLink()
-  },
 
   // 小程序里打不开视频号网页链接，只能复制后到微信聊天里点开；分步说清楚
   copyLink() {
@@ -78,8 +84,14 @@ Page({
     })
   },
 
-  onVideoError() {
-    this.setData({ 'work.feed_token': null })
+  // 播放器报错就退回占位块；开发版 / 体验版把原因显示出来，方便核对 token
+  onVideoError(e) {
+    const detail = (e && e.detail) || {}
+    console.error('[channel-video] error', detail)
+    this.setData({
+      'work.feed_token': null,
+      videoError: detail.errMsg || detail.message || JSON.stringify(detail)
+    })
   },
 
   send() {

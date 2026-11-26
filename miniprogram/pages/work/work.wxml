@@ -1,16 +1,13 @@
 <view wx:if="{{error && !work}}" class="empty">{{error}}</view>
 
 <view wx:if="{{work}}" class="page-wrap plain">
-  <channel-video
-    wx:if="{{work.feed_token}}"
-    class="video"
-    feed-token="{{work.feed_token}}"
-    binderror="onVideoError"
-  />
-  <view wx:else class="player" bindtap="watch">
+  <!-- 用运营审核时填的 feed_token 在页内播放视频号视频；没有 token 或播放器报错时退回复制链接 -->
+  <channel-video wx:if="{{work.feed_token}}" class="video" feed-token="{{work.feed_token}}" binderror="onVideoError" />
+  <view wx:else class="player" bindtap="copyLink">
     <image class="play-ico" src="{{icons.play}}" />
-    <view class="player-title">去视频号观看</view>
-    <view class="player-sub">{{work.finder_user_name && work.feed_id ? '将跳转到视频号播放' : '点这里复制链接，按提示到微信聊天里打开'}}</view>
+    <view class="player-title">复制视频链接</view>
+    <view class="player-sub">复制后到微信聊天里打开</view>
+    <view wx:if="{{showDebug && videoError}}" class="player-err">视频加载失败：{{videoError}}</view>
   </view>
 
   <view class="card">

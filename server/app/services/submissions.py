@@ -20,7 +20,7 @@ from app.services.events import enroll, get_event_or_404
 from app.services.ledger import apply_delta, lock_user, lock_users
 
 SUBMISSION_NOT_FOUND = "作品不存在"
-FEED_INFO_REQUIRED = "请填写视频 token，或视频号 ID 与 feed_id"
+FEED_INFO_REQUIRED = "请填写视频 token"
 FEED_FIELDS = ("finder_user_name", "feed_id", "feed_token")
 MIN_FLOWERS, MAX_FLOWERS = 1, 99
 
@@ -58,18 +58,33 @@ def ensure_feed_unused(db: Session, sub: Submission) -> None:
 
 
 def ensure_feed_info(sub: Submission) -> None:
-    """An approved work must be playable in the mini-program (feed_token →
-    <channel-video>, or finder_user_name + feed_id → openChannelsActivity), and
-    the feed identity is what catches repeats whose short links differ."""
-    if not (sub.feed_token or (sub.finder_user_name and sub.feed_id)):
+    """An approved work needs a feed_token so the work page can play it
+    (<channel-video>); it also identifies the video, catching repeats whose short
+    links differ. finder_user_name + feed_id are optional: when present the work
+    page also offers a jump to 视频号 (wx.openChannelsActivity)."""
+    if not sub.feed_token:
         raise bad_request(FEED_INFO_REQUIRED)
+
+
+FEED_TOKEN_PREFIX = "token/"
+
+
+def normalize_feed_token(value: str) -> str | None:
+    """<channel-video feed-token> only accepts the token with its "token/" prefix
+    (without it the player fails with 1416106), but operators often paste just
+    the bare part. Store it in the form the player needs."""
+    value = value.strip()
+    if not value:
+        return None
+    return value if value.startswith(FEED_TOKEN_PREFIX) else FEED_TOKEN_PREFIX + value
 
 
 def _apply_feed_fields(sub: Submission, values: dict) -> None:
     for field in FEED_FIELDS:
         value = values.get(field)
-        if value is not None:
-            setattr(sub, field, value.strip() or None)
+        if value is None:
+            continue
+        setattr(sub, field, normalize_feed_token(value) if field == "feed_token" else value.strip() or None)
 
 
 def create_submission(db: Session, user: User, data: SubmissionIn) -> Submission:
