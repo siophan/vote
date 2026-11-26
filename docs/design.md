@@ -11,7 +11,7 @@ UI 来源：`ui/dist/index.html`（H5 原型）。本文件是小程序（`minip
 
 ## 技术栈
 
-- 小程序：原生 WXML/WXSS/JS，自定义 tabBar，`appid = wx88c5b6fa273b465d`。
+- 小程序：原生 WXML/WXSS/JS，自定义 tabBar，`appid = wx8438a00a54f5b94b`。
 - 后端：Python 3.12 + FastAPI + SQLAlchemy 2.0 + PostgreSQL（psycopg 3）+ Alembic，uv 管理依赖，pytest（SQLite）测试。
 - 鉴权：`wx.login` → `POST /api/v1/auth/login` → 后端 `jscode2session` 换 openid → 签发 JWT（HS256）。`WECHAT_MOCK_LOGIN=true` 时不调微信，openid 固定为 `mock_dev_user`（或请求体里的 `dev_openid`）。
 

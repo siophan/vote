@@ -37,7 +37,7 @@ if [ ! -f "$BASE/.env" ]; then
 DATABASE_URL=postgresql+psycopg://$USER_NAME:$DB_PASSWORD@127.0.0.1:5432/$DB_NAME
 JWT_SECRET=$(openssl rand -hex 32)
 JWT_EXPIRE_DAYS=30
-WECHAT_APPID=wx88c5b6fa273b465d
+WECHAT_APPID=wx8438a00a54f5b94b
 # From the mini-program admin console (开发管理 → 开发设置). Login fails until it is set.
 WECHAT_SECRET=
 WECHAT_MOCK_LOGIN=false
