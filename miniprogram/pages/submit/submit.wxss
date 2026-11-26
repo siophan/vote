@@ -18,7 +18,8 @@
 .form { margin-top: 12rpx; }
 .url-row { display: flex; align-items: center; }
 .url-row .input { flex: 1; min-width: 0; }
-.paste { margin-left: 16rpx; flex: 0 0 auto; min-height: 92rpx; }
+/* 两级选择器：压过微信内置 button:not([size=mini]) 的左右 margin: auto */
+.url-row .paste { margin-left: 16rpx; margin-right: 0; flex: 0 0 auto; min-height: 92rpx; }
 .field-hint { margin-top: 10rpx; color: var(--muted); font-size: 24rpx; }
 .link-error { margin-top: 12rpx; padding: 14rpx 18rpx; border-radius: 20rpx; background: #f8e2d8; color: #9d5139; font-size: 24rpx; line-height: 1.5; }
 
